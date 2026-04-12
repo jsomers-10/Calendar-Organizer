@@ -1,0 +1,3 @@
+TASK	Submit Draft	03/01/2026 08:00:00 am	03/01/2026 11:59:59 pm	Alex	Home	5	false
+MEETING	Project Kickoff	03/01/2026 09:00:00 am	03/01/2026 10:30:00 am	Alex	GC-120	12	Sprint planning
+ONLINE	Research Sync	03/03/2026 01:00:00 pm	03/03/2026 02:00:00 pm	Alex	Remote	6	Weekly update	Zoom	https://zoom.us/abc
