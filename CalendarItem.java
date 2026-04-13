@@ -65,49 +65,68 @@ public abstract class CalendarItem implements Comparable<CalendarItem>{
         return owner;
     }
     public static void mergeSort(ArrayList<CalendarItem> items) {
-        mergeSort(items, 0, items.size()-1);
+        mergeSort(items, 0, items.size()-1, false);
     }
-    private static void mergeSort(ArrayList<CalendarItem> items, int left, int right) {
-        int mid = (left + right)/2;
-        ArrayList<CalendarItem> firstSplit = new ArrayList<>(items.subList(left, mid));
-        ArrayList<CalendarItem> secondSplit = new ArrayList<>(items.subList(mid+1, right));
-        if (firstSplit.size() != 1 && secondSplit.size() != 1) {
+    public static void mergeSort(ArrayList<CalendarItem> items, boolean sortByTitle) {
+        if (sortByTitle)
+            mergeSort(items, 0, items.size()-1, true);
+    }
+    private static void mergeSort(ArrayList<CalendarItem> items, int left, int right, boolean sortByTitle) {
+        if (left >= right)
             return;
+        int mid = (left + right)/2;
+        ArrayList<CalendarItem> firstSplit = new ArrayList<>();
+        ArrayList<CalendarItem> secondSplit = new ArrayList<>();
+        for(int i = 0; i <= mid; i++) {
+            firstSplit.add(items.get(i));
         }
-        mergeSort(firstSplit, 0, items.size()-1);
-        mergeSort(secondSplit, items.size(), items.size());
-        merge(items, 0, mid, items.size());
+        for(int i = mid+1; i <= right; i++) {
+            secondSplit.add(items.get(i));
+        }
+        mergeSort(firstSplit, 0, firstSplit.size()-1, sortByTitle);
+        mergeSort(secondSplit, 0, secondSplit.size()-1, sortByTitle);
+        merge(items, firstSplit, secondSplit, sortByTitle);
 
 
     }
-    private static void merge(ArrayList<CalendarItem> items, int left, int mid, int right) {
-        ArrayList<CalendarItem> mergedItems = new ArrayList<>();
-        ArrayList<CalendarItem> firstSplit = new ArrayList<>(items.subList(left, mid));
-        ArrayList<CalendarItem> secondSplit = new ArrayList<>(items.subList(mid+1, right));
-        int i = 0, j = 0;
-        while (i < firstSplit.size() && j < secondSplit.size()) {
-            if (firstSplit.get(i).compareTo(secondSplit.get(j)) >= 1) {
-                mergedItems.add(secondSplit.get(j));
-                j++;
-            }
-            else if (firstSplit.get(i).compareTo(secondSplit.get(j)) <= 1) {
-                mergedItems.add(firstSplit.get(i));
-                i++;
+    private static void merge(ArrayList<CalendarItem> items, ArrayList<CalendarItem> firstSplit, ArrayList<CalendarItem> secondSplit, boolean sortByTitle) {
+        int i = 0, j = 0, k = 0;
+        if(!sortByTitle) {
+            while (i < firstSplit.size() && j < secondSplit.size()) {
+                if (firstSplit.get(i).compareTo(secondSplit.get(j)) >= 1) {
+                    items.set(k, secondSplit.get(j));
+                    j++;
+                }
+                else if (firstSplit.get(i).compareTo(secondSplit.get(j)) <= 1){
+                    items.set(k, firstSplit.get(i));
+                    i++;
+                }
+                k++;
             }
         }
-        if (i != firstSplit.size()) {
-            for (int k = i; k < firstSplit.size(); k++) {
-                mergedItems.add(firstSplit.get(i));
+        else {
+            while (i < firstSplit.size() && j < secondSplit.size()) {
+                if (firstSplit.get(i).compareToTitle(secondSplit.get(j)) >= 1) {
+                    items.set(k, secondSplit.get(j));
+                    j++;
+                }
+                else if (firstSplit.get(i).compareToTitle(secondSplit.get(j)) <= 1){
+                    items.set(k, firstSplit.get(i));
+                    i++;
+                }
+                k++;
             }
+        }
 
+        while (i < firstSplit.size()) {
+            items.set(k, firstSplit.get(i));
+            i++;
+            k++;
         }
-        if (j != secondSplit.size()) {
-            for (int k = j; k < secondSplit.size(); k++) {
-                mergedItems.add(secondSplit.get(j));
-            }
-
+        while (j < secondSplit.size()) {
+            items.set(k, secondSplit.get(j));
+            j++;
+            k++;
         }
-        items.clear();
-        items.addAll(mergedItems);
     }
 }

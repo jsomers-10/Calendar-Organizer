@@ -9,7 +9,6 @@ public class Main {
     public static void main(String[] args) throws InvalidCalendarItemException {
         ArrayList<CalendarItem> calendar = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
-
         while (true) {
             System.out.print("Enter calender item (TYPE, title, startDT, endDT, owner, location, " +
                     "Comma separated (, ), 'Done' if complete," +
@@ -31,12 +30,7 @@ public class Main {
             System.out.print("Enter Command: ");
             String command = sc.nextLine();
             if (command.equals("print")) {
-                ArrayList<CalendarItem> sortedCalendar = new ArrayList<>();
-                sortedCalendar.addAll(calendar);
-                CalendarItem.mergeSort(sortedCalendar);
-                for (CalendarItem item : sortedCalendar) {
-                    System.out.println(item);
-                }
+                printItems(calendar, true);
             }
             else if (command.startsWith("happening on ")) {
                 String dtText = command.substring(13).trim();
@@ -129,7 +123,8 @@ public class Main {
                 System.out.println(countOwnedBy(calendar, command.substring(15)));
             }
             else if (command.equals("sort titles")) {
-                CalendarItem.mergeSort(calendar);
+                CalendarItem.mergeSort(calendar, true);
+                printItems(calendar, false);
             }
             else if (command.equals("quit"))
                 break;
@@ -137,6 +132,15 @@ public class Main {
                 System.out.println("Invalid command");
 
 
+        }
+    }
+    private static void printItems(ArrayList<CalendarItem> items, boolean sorting) {
+        ArrayList<CalendarItem> sortedCalendar = new ArrayList<>();
+        sortedCalendar.addAll(items);
+        if (sorting)
+            CalendarItem.mergeSort(sortedCalendar);
+        for (CalendarItem item : sortedCalendar) {
+            System.out.println(item);
         }
     }
 
